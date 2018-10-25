@@ -1,0 +1,43 @@
+﻿@model MessageViewModel
+
+@using Microsoft.Extensions.Options
+@using Post3_GoogleReCaptchaV2.Options
+
+@inject IOptions<AppOptions> AppOptions
+
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<h2>@ViewData["Title"]</h2>
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Contact" method="post">
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea rows="4" asp-for="Message" class="form-control"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="g-recaptcha" data-sitekey="@AppOptions.Value.ReCaptcha.SiteKey"></div>
+                @Html.ValidationMessage("ReCaptchaError", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-default">Send message</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+}
